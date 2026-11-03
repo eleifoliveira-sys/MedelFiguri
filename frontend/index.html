@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d">
+        <meta name="description" content="Explore o catálogo MedelFiguri e encontre sua próxima figure para colecionar.">
+        <title>MedelFiguri | Figures para colecionar</title>
+        <link rel="stylesheet" href="/styles.css">
+        <script type="module" src="/app.js?v=3d-model-preview-20261103"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="/" aria-label="MedelFiguri, página inicial">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a class="button button-small button-quiet cart-link" href="/carrinho.html" aria-label="Abrir meu carrinho">
+                    Carrinho <span data-cart-count aria-live="polite">(…)</span>
+                </a>
+                <a href="/meus-pedidos.html">Meus pedidos</a>
+                <div class="guest-links" data-guest-links hidden>
+                    <a href="/login.html">Entrar</a>
+                    <a class="button button-small" href="/cadastro.html">Criar conta</a>
+                </div>
+                <div class="account-controls" data-account-controls hidden>
+                    <span class="user-label" data-auth-user></span>
+                    <a href="/admin.html" data-admin-only hidden>Administração</a>
+                    <button class="button button-small button-quiet" type="button" data-logout>Sair</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <p class="notice" data-auth-message role="status" aria-live="polite"></p>
+            <p class="notice cart-action-message" id="cart-action-message" role="status" aria-live="polite"></p>
+            <section class="hero" aria-labelledby="welcome-title">
+                <div class="hero-copy">
+                    <p class="eyebrow">Colecione seus universos</p>
+                    <h1 id="welcome-title">Figures feitas para ficar na sua coleção.</h1>
+                    <p class="intro">Explore o catálogo MedelFiguri e descubra modelos inspirados em universos de animes e jogos.</p>
+                    <a class="button" href="#catalogo">Explorar catálogo</a>
+                </div>
+                <div class="hero-art" aria-hidden="true">
+                    <span class="hero-orbit hero-orbit-one"></span>
+                    <span class="hero-orbit hero-orbit-two"></span>
+                    <span class="hero-star">✦</span>
+                </div>
+            </section>
+
+            <section class="catalog section-wrap" id="catalogo" aria-labelledby="catalog-title">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Escolha seu próximo favorito</p>
+                        <h2 id="catalog-title">Catálogo</h2>
+                    </div>
+                    <p class="connection">Status da API: <span id="api-status" data-state="checking" role="status" aria-live="polite">verificando...</span></p>
+                </div>
+                <p class="notice" id="catalog-message" role="status" aria-live="polite">Carregando catálogo...</p>
+                <div class="category-filters" id="category-filters" aria-label="Filtrar por categoria"></div>
+                <div class="product-grid" id="product-grid" aria-live="polite"></div>
+                <nav class="pagination" id="product-pagination" aria-label="Paginação do catálogo"></nav>
+            </section>
+        </main>
+
+        <dialog class="model-dialog" data-model-dialog aria-labelledby="model-dialog-title">
+            <div class="model-dialog-panel">
+                <header class="model-dialog-header">
+                    <div>
+                        <p class="eyebrow">Visualização 3D</p>
+                        <h2 id="model-dialog-title" data-model-title></h2>
+                    </div>
+                    <button class="button button-small button-quiet" type="button" data-model-close aria-label="Fechar visualização 3D">Fechar</button>
+                </header>
+                <p class="model-status" data-model-status role="status" aria-live="polite"></p>
+                <div class="model-stage">
+                    <img class="model-preview" data-model-preview alt="" hidden>
+                    <p class="model-placeholder" data-model-placeholder hidden></p>
+                    <model-viewer
+                        class="product-model"
+                        data-model-viewer
+                        aria-label="Modelo 3D do produto"
+                        camera-controls
+                        touch-action="pan-y"
+                        interaction-prompt="auto"
+                        loading="eager"
+                        reveal="auto"
+                        environment-image="neutral"
+                        exposure="1.1"
+                        shadow-intensity="1"
+                        shadow-softness="0.8"
+                        camera-orbit="0deg 75deg 105%"
+                        min-camera-orbit="auto 20deg 50%"
+                        max-camera-orbit="auto 160deg 200%"
+                        hidden>
+                    </model-viewer>
+                    <progress class="model-progress" data-model-progress max="1" value="0" aria-label="Carregamento do modelo 3D" hidden></progress>
+                </div>
+                <div class="model-controls">
+                    <button class="button button-small button-quiet" type="button" data-model-rotate aria-pressed="false" disabled>Ativar rotação automática</button>
+                    <button class="button button-small button-quiet" type="button" data-model-reset disabled>Restaurar visualização</button>
+                </div>
+                <p class="model-fallback" data-model-fallback role="note" hidden></p>
+            </div>
+        </dialog>
+
+        <footer class="site-footer">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <p>Feito para quem coleciona histórias.</p>
+        </footer>
+    </body>
+</html>

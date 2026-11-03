@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d"><title>Meus pedidos | MedelFiguri</title>
+        <link rel="stylesheet" href="/styles.css"><script type="module" src="/orders.js"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="/#catalogo">Catálogo</a>
+                <a class="button button-small button-quiet cart-link" href="/carrinho.html">Carrinho <span data-cart-count>(…)</span></a>
+                <div class="guest-links" data-guest-links hidden><a href="/login.html">Entrar</a></div>
+                <div class="account-controls" data-account-controls hidden><span class="user-label" data-auth-user></span><button class="button button-small button-quiet" type="button" data-logout>Sair</button></div>
+            </nav>
+        </header>
+        <main class="commerce-page">
+            <p class="notice" data-auth-message role="status" aria-live="polite"></p>
+            <p class="commerce-message" data-message role="status" aria-live="polite">Carregando pedidos...</p>
+            <section aria-labelledby="orders-title"><p class="eyebrow">Seu histórico</p><h1 id="orders-title">Meus pedidos</h1><div class="order-list" data-orders></div><nav class="pagination" data-pagination aria-label="Paginação dos pedidos"></nav></section>
+        </main>
+        <footer class="site-footer"><a class="brand" href="/">Medel<span>Figuri</span></a><p>Feito para quem coleciona histórias.</p></footer>
+    </body>
+</html>

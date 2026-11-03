@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d"><title>Administração | MedelFiguri</title>
+        <link rel="stylesheet" href="/styles.css"><script type="module" src="/admin.js"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="/">Loja</a><a href="/meus-pedidos.html">Pedidos</a>
+                <div class="account-controls" data-account-controls hidden><span class="user-label" data-auth-user></span><button class="button button-small button-quiet" type="button" data-logout>Sair</button></div>
+            </nav>
+        </header>
+        <main class="commerce-page admin-page">
+            <p class="commerce-message" data-message role="status" aria-live="polite">Verificando permissões...</p>
+            <section data-admin-content hidden>
+                <p class="eyebrow">Painel restrito</p><h1>Administração</h1>
+                <div class="admin-stats" data-stats></div>
+                <div class="admin-grid">
+                    <section class="commerce-card"><h2>Produtos</h2>
+                        <form data-product-form>
+                            <input type="hidden" name="id">
+                            <div class="form-field"><label for="p-sku">Código do produto</label><input id="p-sku" name="sku" maxlength="80" required></div>
+                            <div class="form-field"><label for="p-name">Nome</label><input id="p-name" name="name" maxlength="180" required></div>
+                            <div class="form-field"><label for="p-slug">Endereço do produto</label><input id="p-slug" name="slug" maxlength="200" required></div>
+                            <div class="form-field"><label for="p-description">Descrição</label><textarea id="p-description" name="description" rows="3" required></textarea></div>
+                            <div class="form-field"><label for="p-price">Preço (R$)</label><input id="p-price" name="price" inputmode="decimal" pattern="\d+(\.\d{1,2})?" required></div>
+                            <div class="form-field" data-initial-stock><label for="p-stock">Estoque inicial</label><input id="p-stock" name="stock_quantity" type="number" min="0" step="1" value="0"></div>
+                            <div class="form-field"><label for="p-coloration">Coloração</label><select id="p-coloration" name="coloration"><option value="colorido">Colorida</option><option value="sem-cor">Sem cor</option></select></div>
+                            <div class="form-field"><label for="p-status">Situação</label><select id="p-status" name="status"><option value="active">Ativo</option><option value="inactive">Inativo</option></select></div>
+                            <div class="form-field"><label for="p-categories">Categorias</label><select id="p-categories" name="category_ids" multiple></select></div>
+                            <button class="button" type="submit">Salvar produto</button><button class="button button-quiet" type="reset">Limpar</button>
+                        </form>
+                        <h3>Catálogo administrativo</h3>
+                        <div class="admin-product-filters" role="group" aria-label="Filtrar produtos por situação">
+                            <button class="filter-button" type="button" data-product-status="active" aria-pressed="true">Ativos</button>
+                            <button class="filter-button" type="button" data-product-status="inactive" aria-pressed="false">Inativos</button>
+                        </div>
+                        <div data-products class="admin-list"></div>
+                    </section>
+                    <section class="commerce-card"><h2>Categorias</h2>
+                        <form data-category-form>
+                            <input type="hidden" name="id">
+                            <div class="form-field"><label for="c-name">Nome</label><input id="c-name" name="name" maxlength="120" required></div>
+                            <div class="form-field"><label for="c-slug">Endereço da categoria</label><input id="c-slug" name="slug" maxlength="140" required></div>
+                            <div class="form-field"><label for="c-description">Descrição</label><textarea id="c-description" name="description" rows="2"></textarea></div>
+                            <div class="form-field"><label for="c-parent">Categoria superior</label><select id="c-parent" name="parent_id"><option value="">Nenhuma</option></select></div>
+                            <button class="button" type="submit">Salvar categoria</button><button class="button button-quiet" type="reset">Limpar</button>
+                        </form>
+                        <div data-categories class="admin-list"></div>
+                    </section>
+                    <section class="commerce-card"><h2>Ajuste de estoque</h2>
+                        <form data-stock-form>
+                            <div class="form-field"><label for="stock-product">Produto</label><select id="stock-product" name="product_id" required></select></div>
+                            <div class="form-field"><label for="stock-delta">Variação (+/- unidades)</label><input id="stock-delta" name="quantity_delta" type="number" step="1" required></div>
+                            <div class="form-field"><label for="stock-reason">Motivo</label><input id="stock-reason" name="reason" maxlength="255" required></div>
+                            <button class="button" type="submit">Registrar ajuste</button>
+                        </form>
+                        <h3>Movimentações recentes</h3><div data-movements class="admin-list"></div>
+                    </section>
+                    <section class="commerce-card"><h2>Pedidos</h2><div data-admin-orders class="admin-list"></div></section>
+                </div>
+            </section>
+        </main>
+        <footer class="site-footer"><a class="brand" href="/">Medel<span>Figuri</span></a><p>Painel administrativo MedelFiguri.</p></footer>
+    </body>
+</html>

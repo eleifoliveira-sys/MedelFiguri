@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d">
+        <title>Criar conta | MedelFiguri</title>
+        <link rel="stylesheet" href="/styles.css">
+        <script type="module" src="/cadastro.js"></script>
+    </head>
+    <body class="auth-page">
+        <header class="site-header">
+            <a class="brand" href="/" aria-label="MedelFiguri, página inicial">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="/">Voltar ao catálogo</a>
+                <a class="button button-small button-quiet cart-link" href="/carrinho.html" aria-label="Abrir meu carrinho">
+                    Carrinho <span data-cart-count aria-live="polite">(…)</span>
+                </a>
+                <a href="/meus-pedidos.html">Meus pedidos</a>
+                <a class="button button-small" href="/login.html">Entrar</a>
+            </nav>
+        </header>
+        <main class="auth-layout">
+            <section class="auth-card auth-card-wide" aria-labelledby="register-title">
+                <p class="eyebrow">Sua coleção começa aqui</p>
+                <h1 id="register-title">Criar uma conta</h1>
+                <p class="auth-description">Preencha seus dados para fazer parte da comunidade MedelFiguri.</p>
+                <p class="form-message" data-message role="alert" aria-live="polite"></p>
+                <p class="form-success" data-success role="status" aria-live="polite" hidden>
+                    Cadastro realizado. Sua conta não foi conectada automaticamente.
+                    <a href="/login.html">Entre com suas credenciais</a>.
+                </p>
+                <form id="register-form" novalidate>
+                    <div class="form-field">
+                        <label for="name">Nome</label>
+                        <input id="name" name="name" type="text" autocomplete="name" required maxlength="150" aria-describedby="name-error">
+                        <span class="field-error" id="name-error"></span>
+                    </div>
+                    <div class="form-field">
+                        <label for="username">Nome de usuário</label>
+                        <input id="username" name="username" type="text" autocomplete="username" required maxlength="50" aria-describedby="username-error">
+                        <span class="field-error" id="username-error"></span>
+                    </div>
+                    <div class="form-field">
+                        <label for="email">E-mail</label>
+                        <input id="email" name="email" type="email" autocomplete="email" required maxlength="255" aria-describedby="email-error">
+                        <span class="field-error" id="email-error"></span>
+                    </div>
+                    <div class="form-field">
+                        <label for="password">Senha</label>
+                        <input id="password" name="password" type="password" autocomplete="new-password" required minlength="12" aria-describedby="password-help password-error">
+                        <span class="field-hint" id="password-help">Use pelo menos 12 caracteres, com maiúscula, minúscula, número e símbolo.</span>
+                        <span class="field-error" id="password-error"></span>
+                    </div>
+                    <div class="form-field">
+                        <label for="password_confirmation">Confirme sua senha</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required minlength="12" aria-describedby="password_confirmation-error">
+                        <span class="field-error" id="password_confirmation-error"></span>
+                    </div>
+                    <div class="terms-field">
+                        <input id="terms_accepted" name="terms_accepted" type="checkbox" required aria-describedby="terms_accepted-error">
+                        <label for="terms_accepted">Li e aceito os termos de uso.</label>
+                    </div>
+                    <span class="field-error terms-error" id="terms_accepted-error"></span>
+                    <button class="button form-submit" type="submit" data-submit>Criar conta</button>
+                </form>
+                <p class="auth-switch">Já tem uma conta? <a href="/login.html">Entre</a></p>
+            </section>
+        </main>
+        <footer class="site-footer">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <p>Feito para quem coleciona histórias.</p>
+        </footer>
+    </body>
+</html>

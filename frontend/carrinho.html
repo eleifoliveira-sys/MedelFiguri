@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d">
+        <meta name="description" content="Confira os produtos e quantidades do seu carrinho MedelFiguri.">
+        <title>Meu carrinho | MedelFiguri</title>
+        <link rel="stylesheet" href="/styles.css">
+        <script type="module" src="/cart.js"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="/" aria-label="MedelFiguri, página inicial">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="/#catalogo">Catálogo</a>
+                <a class="button button-small button-quiet cart-link" href="/carrinho.html" aria-current="page" aria-label="Meu carrinho">
+                    Carrinho <span data-cart-count aria-live="polite">(…)</span>
+                </a>
+                <a href="/meus-pedidos.html">Meus pedidos</a>
+                <div class="guest-links" data-guest-links hidden>
+                    <a href="/login.html">Entrar</a>
+                    <a class="button button-small" href="/cadastro.html">Criar conta</a>
+                </div>
+                <div class="account-controls" data-account-controls hidden>
+                    <span class="user-label" data-auth-user></span>
+                    <button class="button button-small button-quiet" type="button" data-logout>Sair</button>
+                </div>
+            </nav>
+        </header>
+
+        <main class="cart-page">
+            <p class="notice" data-auth-message role="status" aria-live="polite"></p>
+            <section aria-labelledby="cart-title">
+                <p class="eyebrow">Sua seleção</p>
+                <h1 id="cart-title">Meu carrinho</h1>
+                <p class="notice cart-message" data-cart-message role="status" aria-live="polite">Carregando carrinho...</p>
+
+                <section class="merge-panel" data-merge-panel aria-labelledby="merge-title" hidden>
+                    <h2 id="merge-title">Seu login foi concluído</h2>
+                    <p data-merge-intro></p>
+                    <ul class="merge-conflicts" data-merge-conflicts></ul>
+                    <button class="button button-small" type="button" data-merge-retry hidden>
+                        Tentar combinar carrinhos novamente
+                    </button>
+                </section>
+
+                <div class="cart-layout">
+                    <div class="cart-items" data-cart-items></div>
+                    <aside class="cart-summary" aria-labelledby="summary-title">
+                        <h2 id="summary-title">Resumo</h2>
+                        <dl>
+                            <div>
+                                <dt>Unidades</dt>
+                                <dd data-summary-quantity>—</dd>
+                            </div>
+                            <div class="summary-total">
+                                <dt>Subtotal</dt>
+                                <dd data-summary-subtotal>—</dd>
+                            </div>
+                        </dl>
+                        <p class="summary-note">Frete fixo grátis nesta versão.</p>
+                        <a class="button checkout-button" data-checkout-link href="/checkout.html" aria-disabled="true">Continuar para o checkout</a>
+                        <a class="text-link continue-shopping" href="/#catalogo">Continuar comprando</a>
+                    </aside>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <p>Feito para quem coleciona histórias.</p>
+        </footer>
+    </body>
+</html>

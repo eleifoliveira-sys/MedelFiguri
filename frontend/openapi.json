@@ -1,0 +1,123 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MedelFiguri API",
+    "version": "1.0.0",
+    "description": "API REST do MedelFiguri. A autenticação usa sessão Laravel/Sanctum por cookies na mesma origem. Primeiro faça GET /sanctum/csrf-cookie; em métodos não seguros envie X-XSRF-TOKEN com o valor URL-decoded do cookie XSRF-TOKEN. Esta API não emite bearer tokens."
+  },
+  "servers": [{ "url": "/", "description": "Origem do frontend/Nginx" }],
+  "tags": [
+    { "name": "Autenticação" }, { "name": "Catálogo" }, { "name": "Carrinho" },
+    { "name": "Checkout e pedidos" }, { "name": "Administração" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": { "type": "apiKey", "in": "cookie", "name": "medelfiguri-session", "description": "Cookie de sessão Sanctum. O navegador o envia automaticamente na mesma origem." },
+      "csrfCookie": { "type": "apiKey", "in": "header", "name": "X-XSRF-TOKEN", "description": "Valor URL-decoded do cookie XSRF-TOKEN para requisições não seguras." }
+    },
+    "schemas": {
+      "AddressInput": {
+        "type": "object",
+        "required": ["recipient_name", "cep", "street", "number", "neighborhood", "city", "state"],
+        "properties": {
+          "recipient_name": { "type": "string", "maxLength": 150 },
+          "cep": { "type": "string", "pattern": "^\\\\d{5}-?\\\\d{3}$" },
+          "street": { "type": "string", "maxLength": 180 },
+          "number": { "type": "string", "maxLength": 30 },
+          "complement": { "type": ["string", "null"], "maxLength": 120 },
+          "neighborhood": { "type": "string", "maxLength": 120 },
+          "city": { "type": "string", "maxLength": 120 },
+          "state": { "type": "string", "minLength": 2, "maxLength": 2 }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" }, "order_number": { "type": "string" },
+          "status": { "type": "string", "enum": ["pending", "paid", "processing", "shipped", "delivered", "cancelled"] },
+          "payment_method": { "type": "string" }, "paid_at": { "type": ["string", "null"], "format": "date-time" },
+          "subtotal": { "type": "string" }, "shipping_cost": { "type": "string" },
+          "discount_amount": { "type": "string" }, "total": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "address": { "anyOf": [{ "$ref": "#/components/schemas/AddressInput" }, { "type": "null" }] },
+          "items": { "type": "array", "items": { "type": "object", "properties": {
+            "product_id": { "type": ["integer", "null"] },
+            "product_name": { "type": "string" },
+            "product_sku": { "type": "string" },
+            "unit_price": { "type": "string" },
+            "quantity": { "type": "integer" },
+            "line_total": { "type": "string" }
+          } } }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": { "message": { "type": "string" }, "errors": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } } }
+      }
+    },
+    "responses": {
+      "Unauthenticated": { "description": "Sessão ausente ou expirada.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "Forbidden": { "description": "Papel/permissão insuficiente." },
+      "ValidationError": { "description": "Validação ou regra comercial rejeitada.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "NotFound": { "description": "Recurso inexistente ou não pertencente ao usuário." }
+    }
+  },
+  "paths": {
+    "/api/register": {
+      "post": { "tags": ["Autenticação"], "summary": "Cadastrar cliente", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["name", "username", "email", "password", "password_confirmation", "terms_accepted"], "properties": { "name": { "type": "string" }, "username": { "type": "string" }, "email": { "type": "string", "format": "email" }, "password": { "type": "string", "format": "password" }, "password_confirmation": { "type": "string", "format": "password" }, "terms_accepted": { "type": "boolean", "const": true } } } } } }, "responses": { "201": { "description": "Cliente cadastrado." }, "422": { "$ref": "#/components/responses/ValidationError" } } }
+    },
+    "/api/login": {
+      "post": { "tags": ["Autenticação"], "summary": "Entrar por sessão", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["login", "password"], "properties": { "login": { "type": "string" }, "password": { "type": "string", "format": "password" } } } } } }, "responses": { "200": { "description": "Sessão criada por cookie." }, "401": { "$ref": "#/components/responses/Unauthenticated" } } }
+    },
+    "/api/logout": { "post": { "tags": ["Autenticação"], "security": [{ "sessionCookie": [], "csrfCookie": [] }], "responses": { "200": { "description": "Sessão encerrada." }, "401": { "$ref": "#/components/responses/Unauthenticated" } } } },
+    "/api/me": { "get": { "tags": ["Autenticação"], "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Perfil da sessão." }, "401": { "$ref": "#/components/responses/Unauthenticated" } } } },
+    "/api/admin/me": { "get": { "tags": ["Autenticação"], "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Confirma o papel admin." }, "401": { "$ref": "#/components/responses/Unauthenticated" }, "403": { "$ref": "#/components/responses/Forbidden" } } } },
+    "/api/categories": { "get": { "tags": ["Catálogo"], "summary": "Listar categorias ativas", "responses": { "200": { "description": "Categorias com filhos ativos." } } } },
+    "/api/products": { "get": { "tags": ["Catálogo"], "summary": "Listar produtos ativos", "parameters": [{ "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 } }], "responses": { "200": { "description": "Página do catálogo." } } } },
+    "/api/products/{slug}": { "get": { "tags": ["Catálogo"], "summary": "Consultar produto ativo", "parameters": [{ "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Produto." }, "404": { "$ref": "#/components/responses/NotFound" } } } },
+    "/api/cart": { "get": { "tags": ["Carrinho"], "summary": "Consultar carrinho atual", "responses": { "200": { "description": "Carrinho e subtotal calculado pelo servidor." } } } },
+    "/api/cart/items": { "post": { "tags": ["Carrinho"], "summary": "Adicionar item", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["product_id", "quantity"], "properties": { "product_id": { "type": "integer" }, "quantity": { "type": "integer", "minimum": 1 } } } } } }, "responses": { "200": { "description": "Carrinho atualizado." }, "422": { "$ref": "#/components/responses/ValidationError" } } } },
+    "/api/cart/items/{id}": {
+      "patch": { "tags": ["Carrinho"], "summary": "Atualizar quantidade", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["quantity"], "properties": { "quantity": { "type": "integer", "minimum": 1 } } } } } }, "responses": { "200": { "description": "Carrinho atualizado." }, "404": { "$ref": "#/components/responses/NotFound" }, "422": { "$ref": "#/components/responses/ValidationError" } } },
+      "delete": { "tags": ["Carrinho"], "summary": "Remover item", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Carrinho atualizado." }, "404": { "$ref": "#/components/responses/NotFound" } } }
+    },
+    "/api/cart/guest": { "get": { "tags": ["Carrinho"], "summary": "Consultar carrinho visitante pendente após login", "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Carrinho identificado pelo cookie HttpOnly." }, "401": { "$ref": "#/components/responses/Unauthenticated" }, "404": { "$ref": "#/components/responses/NotFound" } } } },
+    "/api/cart/guest/items/{id}": {
+      "patch": { "tags": ["Carrinho"], "summary": "Corrigir item do carrinho visitante", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["quantity"], "properties": { "quantity": { "type": "integer", "minimum": 1 } } } } } }, "responses": { "200": { "description": "Carrinho atualizado." }, "404": { "$ref": "#/components/responses/NotFound" } } },
+      "delete": { "tags": ["Carrinho"], "summary": "Remover item visitante", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Carrinho atualizado." }, "404": { "$ref": "#/components/responses/NotFound" } } }
+    },
+    "/api/cart/merge-guest": { "post": { "tags": ["Carrinho"], "summary": "Fundir carrinho visitante na conta autenticada", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "responses": { "200": { "description": "Resultado da fusão ou conflitos preservados." }, "401": { "$ref": "#/components/responses/Unauthenticated" } } } },
+    "/api/checkout": {
+      "post": { "tags": ["Checkout e pedidos"], "summary": "Criar pedido e baixar estoque; frete fixo grátis", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["address"], "properties": { "address": { "$ref": "#/components/schemas/AddressInput" } } } } } }, "responses": { "201": { "description": "Pedido criado em transação." }, "401": { "$ref": "#/components/responses/Unauthenticated" }, "422": { "$ref": "#/components/responses/ValidationError" } } }
+    },
+    "/api/orders": { "get": { "tags": ["Checkout e pedidos"], "summary": "Listar pedidos próprios", "security": [{ "sessionCookie": [] }], "parameters": [{ "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 } }], "responses": { "200": { "description": "Página de pedidos e itens históricos." }, "401": { "$ref": "#/components/responses/Unauthenticated" } } } },
+    "/api/orders/{id}": { "get": { "tags": ["Checkout e pedidos"], "summary": "Consultar pedido próprio", "security": [{ "sessionCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Pedido detalhado." }, "404": { "$ref": "#/components/responses/NotFound" } } } },
+    "/api/orders/{id}/confirm-payment": { "post": { "tags": ["Checkout e pedidos"], "summary": "Confirmar pagamento simulado; sem gateway ou dados financeiros", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Pedido pago; repetição idempotente e explicitamente indicada." }, "404": { "$ref": "#/components/responses/NotFound" }, "422": { "$ref": "#/components/responses/ValidationError" } } } },
+    "/api/orders/{id}/cancel": { "post": { "tags": ["Checkout e pedidos"], "summary": "Cancelar pedido elegível e devolver estoque uma única vez", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Pedido cancelado; inclui se o estoque foi devolvido." }, "404": { "$ref": "#/components/responses/NotFound" }, "422": { "$ref": "#/components/responses/ValidationError" } } } },
+    "/api/admin/products": {
+      "get": { "tags": ["Administração"], "summary": "Listar produtos", "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Página de produtos." }, "403": { "$ref": "#/components/responses/Forbidden" } } },
+      "post": { "tags": ["Administração"], "summary": "Cadastrar produto e estoque inicial auditado", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["sku", "name", "slug", "description", "price", "stock_quantity", "coloration"], "properties": { "sku": { "type": "string", "maxLength": 80 }, "name": { "type": "string" }, "slug": { "type": "string" }, "description": { "type": "string" }, "price": { "type": "string" }, "stock_quantity": { "type": "integer", "minimum": 0 }, "coloration": { "type": "string", "enum": ["colorido", "sem-cor"] }, "category_ids": { "type": "array", "items": { "type": "integer" } } } } } } }, "responses": { "201": { "description": "Produto criado." }, "403": { "$ref": "#/components/responses/Forbidden" }, "422": { "$ref": "#/components/responses/ValidationError" } } }
+    },
+    "/api/admin/products/{id}": {
+      "get": { "tags": ["Administração"], "summary": "Consultar produto", "security": [{ "sessionCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Produto e imagens." }, "403": { "$ref": "#/components/responses/Forbidden" } } },
+      "patch": { "tags": ["Administração"], "summary": "Atualizar produto; estoque não pode ser alterado aqui", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "name": { "type": "string" }, "price": { "type": "string" }, "status": { "type": "string", "enum": ["active", "inactive"] }, "category_ids": { "type": "array", "items": { "type": "integer" } } } } } } }, "responses": { "200": { "description": "Produto atualizado." }, "422": { "$ref": "#/components/responses/ValidationError" } } },
+      "delete": { "tags": ["Administração"], "summary": "Arquivar produto sem remover histórico", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Produto inativado." } } }
+    },
+    "/api/admin/products/{productId}/images": { "post": { "tags": ["Administração"], "summary": "Enviar imagem raster validada", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "productId", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "required": ["image"], "properties": { "image": { "type": "string", "format": "binary" }, "alt_text": { "type": "string" }, "is_primary": { "type": "boolean" } } } } } }, "responses": { "201": { "description": "Imagem armazenada em storage público." }, "422": { "$ref": "#/components/responses/ValidationError" } } } },
+    "/api/admin/products/{productId}/images/{imageId}": { "delete": { "tags": ["Administração"], "summary": "Remover imagem associada ao produto", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "productId", "in": "path", "required": true, "schema": { "type": "integer" } }, { "name": "imageId", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Imagem removida." }, "404": { "$ref": "#/components/responses/NotFound" } } } },
+    "/api/admin/products/{productId}/stock-adjustments": { "post": { "tags": ["Administração"], "summary": "Ajustar estoque e registrar movimentação", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "productId", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["quantity_delta", "reason"], "properties": { "quantity_delta": { "type": "integer", "not": { "const": 0 } }, "reason": { "type": "string", "maxLength": 255 } } } } } }, "responses": { "200": { "description": "Produto atualizado." }, "422": { "$ref": "#/components/responses/ValidationError" } } } },
+    "/api/admin/categories": {
+      "get": { "tags": ["Administração"], "summary": "Listar categorias", "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Página de categorias." } } },
+      "post": { "tags": ["Administração"], "summary": "Criar categoria", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["name", "slug"], "properties": { "name": { "type": "string", "maxLength": 120 }, "slug": { "type": "string", "maxLength": 140 }, "description": { "type": ["string", "null"] }, "parent_id": { "type": ["integer", "null"] }, "is_active": { "type": "boolean" } } } } } }, "responses": { "201": { "description": "Categoria criada." }, "422": { "$ref": "#/components/responses/ValidationError" } } }
+    },
+    "/api/admin/categories/{id}": {
+      "get": { "tags": ["Administração"], "summary": "Consultar categoria", "security": [{ "sessionCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Categoria." } } },
+      "patch": { "tags": ["Administração"], "summary": "Atualizar categoria sem criar ciclos", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "name": { "type": "string" }, "slug": { "type": "string" }, "description": { "type": ["string", "null"] }, "parent_id": { "type": ["integer", "null"] }, "is_active": { "type": "boolean" } } } } } }, "responses": { "200": { "description": "Categoria atualizada." }, "422": { "$ref": "#/components/responses/ValidationError" } } },
+      "delete": { "tags": ["Administração"], "summary": "Arquivar categoria", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Categoria inativada sem exclusão física." } } }
+    },
+    "/api/admin/inventory/movements": { "get": { "tags": ["Administração"], "summary": "Consultar movimentações de estoque", "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Movimentações paginadas." } } } },
+    "/api/admin/orders": { "get": { "tags": ["Administração"], "summary": "Listar pedidos com dados do cliente e movimentações", "security": [{ "sessionCookie": [] }], "responses": { "200": { "description": "Pedidos paginados." } } } },
+    "/api/admin/orders/{id}": { "get": { "tags": ["Administração"], "summary": "Consultar pedido e histórico de estoque", "security": [{ "sessionCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "responses": { "200": { "description": "Pedido e movimentações." } } } },
+    "/api/admin/orders/{id}/status": { "patch": { "tags": ["Administração"], "summary": "Avançar pedido: paid → processing → shipped → delivered", "security": [{ "sessionCookie": [], "csrfCookie": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["status"], "properties": { "status": { "type": "string", "enum": ["processing", "shipped", "delivered"] } } } } } }, "responses": { "200": { "description": "Pedido avançado." }, "422": { "$ref": "#/components/responses/ValidationError" } } } }
+  }
+}

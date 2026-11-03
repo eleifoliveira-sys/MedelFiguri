@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d">
+        <title>Entrar | MedelFiguri</title>
+        <link rel="stylesheet" href="/styles.css">
+        <script type="module" src="/login.js"></script>
+    </head>
+    <body class="auth-page">
+        <header class="site-header">
+            <a class="brand" href="/" aria-label="MedelFiguri, página inicial">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="/">Voltar ao catálogo</a>
+                <a class="button button-small button-quiet cart-link" href="/carrinho.html" aria-label="Abrir meu carrinho">
+                    Carrinho <span data-cart-count aria-live="polite">(…)</span>
+                </a>
+                <a href="/meus-pedidos.html">Meus pedidos</a>
+                <a class="button button-small" href="/cadastro.html">Criar conta</a>
+            </nav>
+        </header>
+        <main class="auth-layout">
+            <section class="auth-card" aria-labelledby="login-title">
+                <p class="eyebrow">Que bom ter você de volta</p>
+                <h1 id="login-title">Entrar na sua conta</h1>
+                <p class="auth-description">Acesse sua conta para continuar sua jornada de colecionador.</p>
+                <p class="form-message" data-message role="alert" aria-live="polite"></p>
+                <p class="form-success" data-query-message role="status" aria-live="polite"></p>
+                <form id="login-form" novalidate>
+                    <div class="form-field">
+                        <label for="login">E-mail ou nome de usuário</label>
+                        <input id="login" name="login" type="text" autocomplete="username" required maxlength="255" aria-describedby="login-error">
+                        <span class="field-error" id="login-error"></span>
+                    </div>
+                    <div class="form-field">
+                        <label for="password">Senha</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required aria-describedby="password-error">
+                        <span class="field-error" id="password-error"></span>
+                    </div>
+                    <button class="button form-submit" type="submit" data-submit>Entrar</button>
+                </form>
+                <p class="auth-switch">Ainda não tem uma conta? <a href="/cadastro.html">Cadastre-se</a></p>
+            </section>
+        </main>
+        <footer class="site-footer">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <p>Feito para quem coleciona histórias.</p>
+        </footer>
+    </body>
+</html>

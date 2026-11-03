@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d">
+        <title>Checkout | MedelFiguri</title>
+        <link rel="stylesheet" href="/styles.css">
+        <script type="module" src="/checkout.js"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="/">Medel<span>Figuri</span></a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="/#catalogo">Catálogo</a>
+                <a class="button button-small button-quiet cart-link" href="/carrinho.html">Carrinho <span data-cart-count>(…)</span></a>
+                <a href="/meus-pedidos.html">Meus pedidos</a>
+                <div class="guest-links" data-guest-links hidden><a href="/login.html">Entrar</a></div>
+                <div class="account-controls" data-account-controls hidden>
+                    <span class="user-label" data-auth-user></span>
+                    <button class="button button-small button-quiet" type="button" data-logout>Sair</button>
+                </div>
+            </nav>
+        </header>
+        <main class="commerce-page">
+            <p class="notice" data-auth-message role="status" aria-live="polite"></p>
+            <p class="commerce-message" data-message role="status" aria-live="polite">Carregando seu carrinho...</p>
+            <div class="commerce-layout">
+                <section class="commerce-card" aria-labelledby="checkout-title">
+                    <p class="eyebrow">Quase lá</p>
+                    <h1 id="checkout-title">Endereço de entrega</h1>
+                    <form id="checkout-form">
+                        <div class="form-field"><label for="recipient_name">Nome do destinatário</label><input id="recipient_name" name="recipient_name" autocomplete="name" maxlength="150" required></div>
+                        <div class="form-field"><label for="cep">CEP</label><input id="cep" name="cep" autocomplete="postal-code" inputmode="numeric" pattern="\d{5}-?\d{3}" maxlength="9" required></div>
+                        <div class="form-field"><label for="street">Rua</label><input id="street" name="street" autocomplete="street-address" maxlength="180" required></div>
+                        <div class="form-field"><label for="number">Número</label><input id="number" name="number" maxlength="30" required></div>
+                        <div class="form-field"><label for="complement">Complemento</label><input id="complement" name="complement" maxlength="120"></div>
+                        <div class="form-field"><label for="neighborhood">Bairro</label><input id="neighborhood" name="neighborhood" maxlength="120" required></div>
+                        <div class="form-field"><label for="city">Cidade</label><input id="city" name="city" maxlength="120" required></div>
+                        <div class="form-field"><label for="state">Estado (UF)</label><input id="state" name="state" autocomplete="address-level1" minlength="2" maxlength="2" pattern="[A-Za-z]{2}" required></div>
+                        <p class="field-hint">O endereço será registrado como fotografia desta compra.</p>
+                        <button class="button form-submit" type="submit" data-submit>Finalizar compra</button>
+                    </form>
+                </section>
+                <aside class="commerce-card order-summary">
+                    <h2>Resumo do pedido</h2>
+                    <div class="order-lines" data-items></div>
+                    <dl>
+                        <div><dt>Subtotal</dt><dd data-subtotal>—</dd></div>
+                        <div><dt>Frete</dt><dd data-shipping>R$ 0,00</dd></div>
+                        <div class="summary-total"><dt>Total</dt><dd data-total>—</dd></div>
+                    </dl>
+                    <p class="summary-note">Frete fixo grátis nesta versão. O total final será confirmado pela API.</p>
+                </aside>
+            </div>
+        </main>
+        <footer class="site-footer"><a class="brand" href="/">Medel<span>Figuri</span></a><p>Feito para quem coleciona histórias.</p></footer>
+    </body>
+</html>

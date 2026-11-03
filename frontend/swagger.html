@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#16141d">
+        <title>Documentação da API | MedelFiguri</title>
+        <link rel="stylesheet" href="/swagger-ui/swagger-ui.css">
+        <style>
+            body { margin: 0; background: #16141d; }
+            .topbar { display: none; }
+            .swagger-ui .scheme-container { box-shadow: none; }
+        </style>
+    </head>
+    <body>
+        <div id="swagger-ui"></div>
+        <script src="/swagger-ui/swagger-ui-bundle.js"></script>
+        <script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
+        <script>
+            async function csrfHeader(request) {
+                if (!request.url.includes('/api/') || ['GET', 'HEAD', 'OPTIONS'].includes(request.method.toUpperCase())) {
+                    return request;
+                }
+
+                await fetch('/sanctum/csrf-cookie', { credentials: 'include' });
+                const token = document.cookie.split(';')
+                    .map((value) => value.trim())
+                    .find((value) => value.startsWith('XSRF-TOKEN='));
+                if (token) {
+                    request.headers['X-XSRF-TOKEN'] = decodeURIComponent(token.slice('XSRF-TOKEN='.length));
+                }
+                request.credentials = 'include';
+                return request;
+            }
+
+            window.onload = () => {
+                window.ui = SwaggerUIBundle({
+                    url: '/openapi.json',
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+                    plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+                    layout: 'StandaloneLayout',
+                    withCredentials: true,
+                    requestInterceptor: csrfHeader,
+                });
+            };
+        </script>
+    </body>
+</html>
