@@ -13,12 +13,7 @@ class CatalogController extends Controller
     public function categories(): JsonResponse
     {
         $categories = Category::query()
-            ->whereNull('parent_id')
             ->where('is_active', true)
-            ->with(['children' => fn ($query) => $query
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->select('id', 'parent_id', 'name', 'slug', 'description')])
             ->orderBy('name')
             ->get(['id', 'name', 'slug', 'description']);
 
@@ -35,7 +30,9 @@ class CatalogController extends Controller
                     ->orWhereRaw('LOWER(path) LIKE ?', ['%.gltf']),
             ))
             ->with([
-                'categories:id,name,slug',
+                'categories' => fn ($query) => $query
+                    ->where('categories.is_active', true)
+                    ->select('categories.id', 'categories.name', 'categories.slug'),
                 'images:id,product_id,path,alt_text,sort_order,is_primary',
             ])
             ->orderBy('name')
@@ -64,7 +61,9 @@ class CatalogController extends Controller
         abort_unless($product->status === 'active', 404);
 
         $product->load([
-            'categories:id,name,slug',
+            'categories' => fn ($query) => $query
+                ->where('categories.is_active', true)
+                ->select('categories.id', 'categories.name', 'categories.slug'),
             'images:id,product_id,path,alt_text,sort_order,is_primary',
         ]);
         abort_unless($product->hasAvailable3dModel(), 404);

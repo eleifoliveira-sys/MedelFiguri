@@ -247,10 +247,6 @@ function renderFilters() {
 
     for (const category of categories) {
         categoryFilters.append(categoryFilterButton(category.name, category.slug));
-
-        for (const child of category.children ?? []) {
-            categoryFilters.append(categoryFilterButton(child.name, child.slug));
-        }
     }
 }
 
@@ -259,13 +255,7 @@ function productMatchesCategory(product) {
         return true;
     }
 
-    const selectedRoot = categories.find((category) => category.slug === selectedCategory);
-    const allowedSlugs = new Set([
-        selectedCategory,
-        ...(selectedRoot?.children ?? []).map((category) => category.slug),
-    ]);
-
-    return (product.categories ?? []).some((category) => allowedSlugs.has(category.slug));
+    return (product.categories ?? []).some((category) => category.slug === selectedCategory);
 }
 
 function productCard(product) {

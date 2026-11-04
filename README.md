@@ -54,6 +54,10 @@ página carregada. Os detalhes continuam disponíveis por
 `GET /api/products/{slug}`.
 Os sete renders `.glb` em `storage/app/public` são semeados como modelos de
 demonstração, associados a categorias e disponibilizados em `/storage/`.
+O catálogo oferece as categorias **Animes** e **Jogos**; o filtro **Todas**
+mostra os produtos sem restringir a categoria. Luffy, Goku, Frieren e Gato de
+Botas ficam em Animes; Mario, Zard e Mander ficam em Jogos. Cada produto tem
+uma descrição específica do personagem ou universo representado.
 
 ### Catálogo e visualização interativa 3D
 

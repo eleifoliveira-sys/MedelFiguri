@@ -46,7 +46,7 @@ class CatalogApiTest extends TestCase
             ->assertJsonPath('data.0.images.0.path', 'renders/figure.glb');
     }
 
-    public function test_it_serves_category_tree_and_hides_inactive_products(): void
+    public function test_it_serves_flat_categories_and_hides_inactive_products(): void
     {
         $category = Category::create([
             'name' => 'Animes',
@@ -82,8 +82,9 @@ class CatalogApiTest extends TestCase
 
         $this->getJson('/api/categories')
             ->assertOk()
+            ->assertJsonCount(2)
             ->assertJsonPath('0.slug', 'animes')
-            ->assertJsonPath('0.children.0.slug', 'anime-aventura');
+            ->assertJsonPath('1.slug', 'anime-aventura');
 
         $this->getJson('/api/products')
             ->assertOk()
