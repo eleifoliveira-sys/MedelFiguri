@@ -8,6 +8,7 @@ FROM nginx:alpine
 
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 COPY frontend/ /usr/share/nginx/html
+COPY openapi.yaml /usr/share/nginx/html/openapi.yaml
 COPY --from=swagger /workspace/node_modules/swagger-ui-dist /usr/share/nginx/html/swagger-ui
 COPY --from=swagger /workspace/node_modules/@google/model-viewer/dist/model-viewer.min.js /usr/share/nginx/html/model-viewer.min.js
 
