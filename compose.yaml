@@ -1,62 +1,66 @@
 services:
-    frontend:
-        build:
-            context: .
-            dockerfile: frontend/Dockerfile
-        depends_on:
-            backend:
-                condition: service_healthy
-        ports:
-            - "127.0.0.1:8080:80"
+  db:
+    container_name: db
+    image: mysql:8.4
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: medelfiguri
+      MYSQL_DATABASE: medelfiguri
+      MYSQL_USER: medelfiguri
+      MYSQL_PASSWORD: medelfiguri
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--protocol=tcp"]
+      interval: 5s
+      retries: 10
 
-    backend:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        env_file:
-            - .env
-        environment:
-            APP_NAME: MedelFiguri
-            APP_URL: http://localhost:8080
-            DB_CONNECTION: mysql
-            DB_HOST: db
-            DB_PORT: 3306
-            DB_DATABASE: ${DB_DATABASE:-medelfiguri}
-            DB_USERNAME: ${DB_USERNAME:-medelfiguri}
-            DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
-            SANCTUM_STATEFUL_DOMAINS: localhost:8080,127.0.0.1:8080
-        depends_on:
-            db:
-                condition: service_healthy
-        healthcheck:
-            test:
-                [
-                    "CMD-SHELL",
-                    "php -r '$$pdo = new PDO(\"mysql:host=\" . getenv(\"DB_HOST\") . \";port=\" . getenv(\"DB_PORT\") . \";dbname=\" . getenv(\"DB_DATABASE\"), getenv(\"DB_USERNAME\"), getenv(\"DB_PASSWORD\")); $$pdo->query(\"SELECT 1\");' && php -r 'exit(@file_get_contents(\"http://127.0.0.1:8000/up\") === false ? 1 : 0);'",
-                ]
-            interval: 10s
-            timeout: 3s
-            retries: 10
-            start_period: 30s
-        ports:
-            - "127.0.0.1:8000:8000"
+  api:
+    container_name: api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    expose:
+      - "8000"
+    volumes:
+      - ./api:/app
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "php",
+          "-r",
+          "exit(@file_get_contents('http://127.0.0.1:8000/up') === false ? 1 : 0);",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
 
-    db:
-        image: mysql:8.4
-        environment:
-            MYSQL_DATABASE: ${DB_DATABASE:-medelfiguri}
-            MYSQL_USER: ${DB_USERNAME:-medelfiguri}
-            MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD in .env}}
-            MYSQL_ROOT_HOST: localhost
-        healthcheck:
-            test: ["CMD-SHELL", "mysqladmin ping --host=127.0.0.1 --silent"]
-            interval: 5s
-            timeout: 3s
-            retries: 20
-        volumes:
-            - mysql_data:/var/lib/mysql
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+
+  proxy:
+    container_name: proxy
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+    ports:
+      - "80:80"
 
 volumes:
-    mysql_data:
-        name: medelfiguri_mysql_data
+  mysql_data:
