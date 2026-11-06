@@ -22,8 +22,10 @@ services:
       context: ./api
       dockerfile: Dockerfile.dev
     depends_on:
-      mysql:
+      db:
         condition: service_healthy
+    environment:
+      VIEW_COMPILED_PATH: /tmp/medelfiguri-views
     expose:
       - "8000"
     volumes:
@@ -34,7 +36,7 @@ services:
           "CMD",
           "php",
           "-r",
-          "exit(@file_get_contents('http://127.0.0.1:8000/up') === false ? 1 : 0);",
+          "exit(@file_get_contents('http://127.0.0.1:8000/api/docs/openapi.yaml') === false ? 1 : 0);",
         ]
       interval: 5s
       timeout: 3s
@@ -44,8 +46,11 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
     expose:
       - "80"
 

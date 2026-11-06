@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#16141d">
         <title>Documentação da API | MedelFiguri</title>
-        <link rel="stylesheet" href="/swagger-ui/swagger-ui.css">
+        <link rel="stylesheet" href="/api/docs/assets/swagger-ui.css">
         <style>
             body { margin: 0; background: #16141d; }
             .topbar { display: none; }
@@ -14,11 +14,11 @@
     </head>
     <body>
         <div id="swagger-ui"></div>
-        <script src="/swagger-ui/swagger-ui-bundle.js"></script>
-        <script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
+        <script src="/api/docs/assets/swagger-ui-bundle.js"></script>
+        <script src="/api/docs/assets/swagger-ui-standalone-preset.js"></script>
         <script>
             async function csrfHeader(request) {
-                if (!request.url.includes('/api/') || ['GET', 'HEAD', 'OPTIONS'].includes(request.method.toUpperCase())) {
+                if (!request.url.includes('/api/') || !request.method || ['GET', 'HEAD', 'OPTIONS'].includes(request.method.toUpperCase())) {
                     return request;
                 }
 
@@ -35,7 +35,7 @@
 
             window.onload = () => {
                 window.ui = SwaggerUIBundle({
-                    url: '/openapi.yaml',
+                    url: '/api/docs/openapi.yaml',
                     dom_id: '#swagger-ui',
                     deepLinking: true,
                     presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],

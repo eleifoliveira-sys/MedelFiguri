@@ -11,6 +11,33 @@ use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\OrderController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/docs', function () {
+    return response()->view('api-docs');
+});
+
+Route::get('/docs/openapi.yaml', function () {
+    return response()->file(base_path('openapi.yaml'), [
+        'Content-Type' => 'application/yaml; charset=UTF-8',
+    ]);
+});
+
+Route::get('/docs/assets/{asset}', function (string $asset) {
+    $assetPath = base_path('node_modules/swagger-ui-dist/'.$asset);
+    if (!is_file($assetPath)) {
+        $assetPath = '/opt/swagger-ui/'.$asset;
+    }
+
+    $contentTypes = [
+        'swagger-ui.css' => 'text/css; charset=UTF-8',
+        'swagger-ui-bundle.js' => 'application/javascript',
+        'swagger-ui-standalone-preset.js' => 'application/javascript',
+    ];
+
+    return response()->file($assetPath, [
+        'Content-Type' => $contentTypes[$asset],
+    ]);
+})->where('asset', 'swagger-ui\.css|swagger-ui-bundle\.js|swagger-ui-standalone-preset\.js');
+
 Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware(['guest', 'throttle:5,1']);

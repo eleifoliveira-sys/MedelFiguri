@@ -5,5 +5,11 @@
 :8000 {
     root * /app/public
     encode zstd br gzip
+
+    handle_path /storage/* {
+        root * /app/storage/app/public
+        file_server
+    }
+
     php_server
 }

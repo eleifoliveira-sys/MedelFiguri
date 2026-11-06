@@ -1,4 +1,10 @@
-FROM dunglas/frankenphp:1-php8.4-bookworm
+FROM node:22-alpine AS swagger-assets
+
+WORKDIR /workspace
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+FROM dunglas/frankenphp:1-php8.4-bookworm AS api
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
@@ -10,6 +16,7 @@ WORKDIR /app
 
 COPY --chown=www-data:www-data . .
 COPY docker/backend/Caddyfile /etc/caddy/Caddyfile
+COPY --from=swagger-assets /workspace/node_modules/swagger-ui-dist /opt/swagger-ui
 
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
     && composer check-platform-reqs --no-dev \

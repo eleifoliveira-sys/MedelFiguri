@@ -39,9 +39,9 @@ Migrations não são executadas automaticamente. Para um banco de desenvolviment
 novo, confira o status e aplique as migrations antes dos dados de demonstração:
 
 ```sh
-docker compose exec backend php artisan migrate:status
-docker compose exec backend php artisan migrate
-docker compose exec backend php artisan db:seed
+docker compose exec api php artisan migrate:status
+docker compose exec api php artisan migrate
+docker compose exec api php artisan db:seed
 ```
 
 O `db:seed` cria papéis, categorias, produtos e a conta administrativa
@@ -53,7 +53,7 @@ O catálogo público em `/` consulta `GET /api/categories` e
 página carregada. Os detalhes continuam disponíveis por
 `GET /api/products/{slug}`.
 Os sete renders `.glb` em `storage/app/public` são semeados como modelos de
-demonstração, associados a categorias e disponibilizados em `/storage/`.
+demonstração, associados a categorias e disponibilizados em `/api/storage/`.
 O catálogo oferece as categorias **Animes** e **Jogos**; o filtro **Todas**
 mostra os produtos sem restringir a categoria. Luffy, Goku, Frieren e Gato de
 Botas ficam em Animes; Mario, Zard e Mander ficam em Jogos. Cada produto tem
@@ -72,7 +72,7 @@ Cada card renderiza o modelo 3D e abre a visualização ampliada ao ser clicado.
 O componente oficial Google `<model-viewer>` **4.4.0** é instalado localmente
 e servido pelo Nginx, sem CDN em tempo de execução. Aceita modelos `.glb` e
 `.gltf`; os assets de demonstração atuais são GLB em `storage/app/public`,
-publicados pela rota `/storage/`.
+publicados pela rota `/api/storage/`.
 
 Os sete arquivos atualmente associados a produtos no catálogo são:
 
@@ -310,12 +310,12 @@ independentemente da interface.
 
 ## Swagger UI / OpenAPI
 
-Com o frontend iniciado pelo Compose, acesse
-<http://localhost:8080/swagger.html>. O Swagger UI é servido localmente pelo
-container Nginx; o documento OpenAPI 3.1 está em
-<http://localhost:8080/openapi.json>. As requisições de escrita pela interface
-solicitam CSRF e enviam `X-XSRF-TOKEN`; rotas protegidas usam o cookie de sessão
-Sanctum. Nenhuma credencial real está incluída no documento.
+Com o Compose iniciado, acesse <http://localhost/api/docs>. A interface e a
+especificação OpenAPI 3.1 (`api/openapi.yaml`) são servidas pelo backend; o
+documento também está disponível em <http://localhost/api/docs/openapi.yaml>.
+As requisições de escrita pela interface solicitam CSRF e enviam
+`X-XSRF-TOKEN`; rotas protegidas usam o cookie de sessão Sanctum. Nenhuma
+credencial real está incluída no documento.
 
 ## Páginas de autenticação
 

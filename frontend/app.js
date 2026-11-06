@@ -39,7 +39,7 @@ function storageUrl(path) {
         return null;
     }
 
-    return `/storage/${segments.map(encodeURIComponent).join('/')}`;
+    return `/api/storage/${segments.map(encodeURIComponent).join('/')}`;
 }
 
 function productModel(product) {

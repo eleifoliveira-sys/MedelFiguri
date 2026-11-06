@@ -91,7 +91,7 @@ function storageUrl(path) {
         return null;
     }
 
-    return `/storage/${path.split('/').map(encodeURIComponent).join('/')}`;
+    return `/api/storage/${path.split('/').map(encodeURIComponent).join('/')}`;
 }
 
 function loadModelViewer() {

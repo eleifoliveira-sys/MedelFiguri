@@ -152,6 +152,7 @@ class AdminApiTest extends TestCase
             ->assertCreated()
             ->json('data');
 
+        $this->assertSame('/api/storage/'.$image['path'], $image['url']);
         Storage::disk('public')->assertExists($image['path']);
         $this->deleteJson("/api/admin/products/{$product->id}/images/{$image['id']}")
             ->assertOk();

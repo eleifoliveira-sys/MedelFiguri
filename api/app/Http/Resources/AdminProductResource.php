@@ -30,7 +30,7 @@ class AdminProductResource extends JsonResource
                 'path' => $image->path,
                 'alt_text' => $image->alt_text,
                 'is_primary' => $image->is_primary,
-                'url' => '/storage/'.$image->path,
+                'url' => '/api/storage/'.$image->path,
             ])->values(),
         ];
     }
