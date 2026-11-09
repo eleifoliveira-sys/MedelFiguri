@@ -1,16 +1,24 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Users;
 
+use App\Models\Address;
+use App\Models\Cart;
+use App\Models\InventoryMovement;
+use App\Models\Order;
+use App\Models\Review;
+use App\Models\Role;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    protected static string $factory = UserFactory::class;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

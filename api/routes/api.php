@@ -4,11 +4,12 @@ use App\Http\Controllers\Api\AdminCategoryController;
 use App\Http\Controllers\Api\AdminInventoryController;
 use App\Http\Controllers\Api\AdminOrderController;
 use App\Http\Controllers\Api\AdminProductController;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CatalogController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/docs', function () {
@@ -23,7 +24,7 @@ Route::get('/docs/openapi.yaml', function () {
 
 Route::get('/docs/assets/{asset}', function (string $asset) {
     $assetPath = base_path('node_modules/swagger-ui-dist/'.$asset);
-    if (!is_file($assetPath)) {
+    if (! is_file($assetPath)) {
         $assetPath = '/opt/swagger-ui/'.$asset;
     }
 
@@ -55,7 +56,7 @@ Route::delete('/cart/items/{id}', [CartController::class, 'removeItem'])
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/me', [UserController::class, 'me']);
     Route::post('/checkout', [CheckoutController::class, 'store']);
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show'])->whereNumber('id');
@@ -69,7 +70,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
         ->whereNumber('id');
     Route::post('/cart/merge-guest', [CartController::class, 'mergeGuest']);
 
-    Route::get('/admin/me', [AuthController::class, 'adminMe'])
+    Route::get('/admin/me', [UserController::class, 'me'])
         ->middleware('role:admin');
 
     Route::prefix('/admin')->middleware('role:admin')->group(function (): void {

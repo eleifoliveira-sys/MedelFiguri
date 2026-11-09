@@ -8,7 +8,7 @@ use App\Http\Resources\AdminInventoryMovementResource;
 use App\Http\Resources\AdminProductResource;
 use App\Models\InventoryMovement;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\InventoryService;
 use Illuminate\Http\JsonResponse;
 

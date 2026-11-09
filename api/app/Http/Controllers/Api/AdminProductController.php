@@ -7,7 +7,7 @@ use App\Http\Requests\StoreAdminProductRequest;
 use App\Http\Requests\StoreProductImageRequest;
 use App\Http\Requests\UpdateAdminProductRequest;
 use App\Http\Resources\AdminProductResource;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\AdminProductService;
 use App\Services\InventoryService;
 use Illuminate\Http\JsonResponse;

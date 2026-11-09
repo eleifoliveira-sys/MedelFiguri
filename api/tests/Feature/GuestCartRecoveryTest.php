@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Cart;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Support\GuestCartCookie;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;

@@ -1,6 +1,6 @@
-import { ApiError, apiRequest } from './api.js';
-import { getCurrentUser } from './auth.js';
-import { refreshCartCount } from './cart-state.js';
+import { ApiError, apiRequest } from '../api/api.js';
+import { getCurrentUser } from '../domain/auth.js';
+import { refreshCartCount } from '../domain/cart-state.js';
 
 const form = document.querySelector('#login-form');
 const message = document.querySelector('[data-message]');

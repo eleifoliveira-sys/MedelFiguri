@@ -1,25 +1,4 @@
-import { ApiError, apiRequest } from './api.js';
-
-let currentUser = null;
-
-export async function getCurrentUser() {
-    try {
-        const response = await apiRequest('/api/me');
-        currentUser = response?.data ?? null;
-        return currentUser;
-    } catch (error) {
-        if (error instanceof ApiError && error.status === 401) {
-            currentUser = null;
-            return null;
-        }
-
-        throw error;
-    }
-}
-
-export async function verifySession() {
-    return getCurrentUser();
-}
+import { logout } from '../domain/auth.js';
 
 export function updateAuthUI(user) {
     const userLabel = document.querySelector('[data-auth-user]');
@@ -43,21 +22,6 @@ export function updateAuthUI(user) {
     adminLinks.forEach((link) => {
         link.hidden = !isAdmin;
     });
-
-    currentUser = user ?? null;
-}
-
-export async function logout() {
-    try {
-        await apiRequest('/api/logout', { method: 'POST' });
-    } catch (error) {
-        if (!(error instanceof ApiError && error.status === 401)) {
-            throw error;
-        }
-    }
-
-    currentUser = null;
-    updateAuthUI(null);
 }
 
 export function bindLogoutButtons() {
@@ -68,6 +32,7 @@ export function bindLogoutButtons() {
 
             try {
                 await logout();
+                updateAuthUI(null);
                 window.location.assign('/login.html?loggedOut=1');
             } catch {
                 if (message) {

@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Role;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Support\GuestCartCookie;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;

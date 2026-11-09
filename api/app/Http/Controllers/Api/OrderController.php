@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConfirmPaymentRequest;
 use App\Http\Resources\OrderResource;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\OrderService;
 use App\Services\SimulatedPaymentService;
 use Illuminate\Http\JsonResponse;

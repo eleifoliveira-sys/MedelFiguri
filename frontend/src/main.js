@@ -1,6 +1,7 @@
-import { apiRequest } from './api.js';
-import { bindLogoutButtons, getCurrentUser, updateAuthUI } from './auth.js';
-import { refreshCartCount } from './cart-state.js';
+import { apiRequest } from './api/api.js';
+import { getCurrentUser } from './domain/auth.js';
+import { refreshCartCount } from './domain/cart-state.js';
+import { bindLogoutButtons, updateAuthUI } from './ui/auth-ui.js';
 
 const apiStatus = document.querySelector('#api-status');
 const authMessage = document.querySelector('[data-auth-message]');
@@ -57,7 +58,7 @@ function productPreview(product) {
 }
 
 function loadModelViewer() {
-    modelViewerModule ??= import('/model-viewer.min.js');
+    modelViewerModule ??= import('/public/model-viewer.min.js');
     return modelViewerModule;
 }
 

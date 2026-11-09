@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Support\CartMoney;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

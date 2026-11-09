@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\Auth\AuthenticatedUserResource;
 use App\Services\AuthService;
 use App\Support\GuestCartCookie;
 use Illuminate\Http\JsonResponse;
@@ -20,13 +19,13 @@ class AuthController extends Controller
     {
         $user = $this->authService->register($request->validated());
 
-        return UserResource::make($user)
+        return AuthenticatedUserResource::make($user)
             ->additional(['message' => 'Cadastro realizado. Faça login para continuar.'])
             ->response()
             ->setStatusCode(201);
     }
 
-    public function login(LoginRequest $request): JsonResponse|UserResource
+    public function login(LoginRequest $request): JsonResponse|AuthenticatedUserResource
     {
         $result = $this->authService->login($request->validated(), $request);
 
@@ -34,7 +33,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'As credenciais informadas são inválidas.'], 401);
         }
 
-        $response = UserResource::make($result['user'])
+        $response = AuthenticatedUserResource::make($result['user'])
             ->additional(['cart_merge' => $result['cart_merge']])
             ->response();
 
@@ -45,26 +44,10 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function me(Request $request): UserResource
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        return UserResource::make($user->load('roles:id,name,slug'));
-    }
-
     public function logout(Request $request): JsonResponse
     {
         $this->authService->logout($request);
 
         return response()->json(['message' => 'Sessão encerrada.']);
-    }
-
-    public function adminMe(Request $request): UserResource
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        return UserResource::make($user->load('roles:id,name,slug'));
     }
 }

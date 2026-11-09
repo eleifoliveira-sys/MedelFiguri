@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\CheckoutService;
 use App\Services\InventoryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;

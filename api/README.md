@@ -325,13 +325,19 @@ credencial real está incluída no documento.
 - `/cadastro.html`: envia nome, username, e-mail, senha, confirmação e aceite
   explícito dos termos. O cadastro não inicia uma sessão; após o sucesso, a
   pessoa deve entrar pela página de login.
-- `frontend/api.js` centraliza Fetch, cookies de sessão, cabeçalho CSRF e erros
-  HTTP. Para operações não seguras, solicita primeiro
+- `frontend/src/api/api.js` centraliza Fetch, cookies de sessão, cabeçalho CSRF
+  e erros HTTP. Para operações não seguras, solicita primeiro
   `GET /sanctum/csrf-cookie`, lê o cookie `XSRF-TOKEN` e envia
   `X-XSRF-TOKEN` com `credentials: 'include'`.
-- `frontend/auth.js` consulta `/api/me` como fonte de verdade e realiza logout
-  por `POST /api/logout`. A interface não armazena sessão, senha ou token em
-  `localStorage` ou `sessionStorage`.
+- `frontend/src/domain/auth.js` consulta `/api/me` como fonte de verdade e
+  realiza logout por `POST /api/logout`. A interface não armazena sessão, senha
+  ou token em `localStorage` ou `sessionStorage`.
+- O código do frontend fica em `frontend/src`: `api/` para comunicação HTTP,
+  `app/` para os scripts das páginas, `domain/` para regras e estado da loja,
+  `ui/` para componentes e comportamento visual, `styles/` para CSS e `assets/`
+  para recursos estáticos. `src/main.js` inicia a página principal; os HTMLs
+  ficam na raiz de `frontend/` para preservar as URLs atuais. Arquivos públicos,
+  incluindo o viewer 3D fornecido pelo build Docker, ficam em `frontend/public/`.
 - O Nginx serve as páginas e encaminha `/api` e `/sanctum` para o backend na
   mesma origem. O catálogo permanece público; a interface não substitui a
   autorização feita pelo backend.
@@ -345,6 +351,4 @@ real de frete continuam fora do escopo atual.
 php artisan test
 ```
 
-Última execução completa: **89 testes aprovados, 507 assertions**. Consulte
-`PROJECT_STATUS.md` para as demais verificações e limitações conhecidas.
-completa após as etapas de pagamento, pedidos, administração e frontend.
+Última execução completa: **96 testes aprovados, 545 assertions**.

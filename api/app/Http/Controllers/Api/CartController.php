@@ -7,7 +7,7 @@ use App\Http\Requests\AddCartItemRequest;
 use App\Http\Requests\UpdateCartItemRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\CartService;
 use App\Support\GuestCartCookie;
 use Illuminate\Http\JsonResponse;

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\InventoryService;
 use App\Services\OrderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;

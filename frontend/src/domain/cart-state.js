@@ -1,4 +1,4 @@
-import { ApiError, apiRequest } from './api.js';
+import { ApiError, apiRequest } from '../api/api.js';
 
 function cartQuantity(response) {
     const quantity = Number(response?.data?.total_quantity);

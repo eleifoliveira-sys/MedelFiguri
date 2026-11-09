@@ -1,6 +1,7 @@
-import { ApiError, apiRequest } from './api.js';
-import { bindLogoutButtons, getCurrentUser, updateAuthUI } from './auth.js';
-import { refreshCartCount } from './cart-state.js';
+import { ApiError, apiRequest } from '../api/api.js';
+import { getCurrentUser } from '../domain/auth.js';
+import { refreshCartCount } from '../domain/cart-state.js';
+import { bindLogoutButtons, updateAuthUI } from '../ui/auth-ui.js';
 
 const cartItems = document.querySelector('[data-cart-items]');
 const cartMessage = document.querySelector('[data-cart-message]');
@@ -95,7 +96,7 @@ function storageUrl(path) {
 }
 
 function loadModelViewer() {
-    modelViewerModule ??= import('/model-viewer.min.js').catch((error) => {
+    modelViewerModule ??= import('/public/model-viewer.min.js').catch((error) => {
         modelViewerModule = null;
         throw error;
     });

@@ -1,5 +1,6 @@
-import { ApiError, apiRequest } from './api.js';
-import { bindLogoutButtons, getCurrentUser, updateAuthUI } from './auth.js';
+import { ApiError, apiRequest } from '../api/api.js';
+import { getCurrentUser } from '../domain/auth.js';
+import { bindLogoutButtons, updateAuthUI } from '../ui/auth-ui.js';
 
 const message = document.querySelector('[data-message]');
 const content = document.querySelector('[data-admin-content]');

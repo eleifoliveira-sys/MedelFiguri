@@ -1,6 +1,7 @@
-import { ApiError, apiRequest } from './api.js';
-import { bindLogoutButtons, getCurrentUser, updateAuthUI } from './auth.js';
-import { refreshCartCount } from './cart-state.js';
+import { ApiError, apiRequest } from '../api/api.js';
+import { getCurrentUser } from '../domain/auth.js';
+import { refreshCartCount } from '../domain/cart-state.js';
+import { bindLogoutButtons, updateAuthUI } from '../ui/auth-ui.js';
 
 const ordersContainer = document.querySelector('[data-orders]');
 const message = document.querySelector('[data-message]');
