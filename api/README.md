@@ -20,8 +20,8 @@ criado ou fornecido pelo projeto.
 docker compose up --build -d
 ```
 
-- Frontend (Nginx): <http://localhost:8080>
-- Backend (FrankenPHP): <http://localhost:8000>
+- Frontend (Nginx): <http://localhost>
+- Backend (FrankenPHP): <http://localhost/api>
 - MySQL: serviço `db`, porta `3306` somente na rede interna do Compose; não
   há porta MySQL publicada no host.
 
