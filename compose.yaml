@@ -26,10 +26,10 @@ services:
         condition: service_healthy
     environment:
       VIEW_COMPILED_PATH: /tmp/medelfiguri-views
+    volumes:
+      - ./api/.env:/app/.env
     expose:
       - "8000"
-    volumes:
-      - ./api:/app
     healthcheck:
       test:
         [
